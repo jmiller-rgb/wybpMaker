@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<title>wybpMaker</title>
+		<link href="css/style.css" rel="stylesheet"/>
+	</head>
+	<body>
+		<p>Reminder: You will need 3 paragraphs, with a recommended word count of 100-200 words per paragraph.</p>
+		<p>Introduction word count:&nbsp;</p>
+		<p>Paragraph 1 word count:&nbsp;</p>
+		<p>Paragraph 2 word count:&nbsp;</p>
+
+		<form xmlns="http://www.w3.org/1999/xhtml" id="wybpMaker">
+			<input id="titleEdit" name="Title" class="titleEdit editPara" required="true" type="text" value="What Ya Been Playing Week " /><br>
+			<textarea id="introEdit" class="editPara" rows="10" cols="250" name="Intro" placeholder="Introduction (What you played" required="true" wrap="soft"></textarea><br>
+			<textarea id="para3Edit" class="editPara" rows="10" cols="250" name="Para3" placeholder="Why you played it" required="true" wrap="soft"></textarea><br>
+			<textarea id="para1Edit" class="editPara" rows="10" cols="250" name="Para1" placeholder="What you liked about it and why)" required="true" wrap="soft"></textarea><br>
+			<textarea id="para2Edit" class="editPara" rows="10" cols="250" name="Para2" placeholder="What you didn't like about it and why)" required="true" wrap="soft"></textarea><br>
+			<textarea id="para4Edit" class="editPara" rows="10" cols="250" name="Para4" placeholder="Extra" required="true" wrap="soft"></textarea><br>
+			<button type="button" id="submitBtn" class="btn" name="Submit">Done</button>
+		</form>
+		
+		<script>
+			var wybpForm = document.getElementById("wybpMaker");
+			var title = document.getElementById("titleEdit");
+			var intro = document.getElementById("introEdit");
+			var para1 = document.getElementById("para1Edit");
+			var para2 = document.getElementById("para2Edit");
+			var para3 = document.getElementById("para3Edit");
+			var para4 = document.getElementById("para4Edit");
+			var submit = document.getElementById("submitBtn");
+			submit.onclick = preSubmit;
+			wybpForm.onsubmit = meow();
+			function checkValues() {
+				let validValues = true;
+				if (title.value == "What Ya Been Playing Week ")
+					validValues = false;
+				if (intro.value == "")
+					validValues = false;
+				if (para1.value == "")
+					validValues = false;
+				if (para2.value == "")
+					validValues = false;
+				if (para3.value == "")
+					validValues = false;
+				if (para4.value == "")
+					validValues = false;
+				return validValues;
+			}
+			function meow() {
+				if (checkValues()) {
+					writeDocument(true);
+				}
+			}
+			function preSubmit() {
+				if (title.value != "What Ya Been Playing Week ")
+					meow();
+			}
+			
+			function writeDocument(notLoading) {
+				alert("l");
+				let rtfTemplate = [
+					"{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}",
+					"{\\*\\generator Riched20 10.0.18362}\\viewkind4\\uc1 ",
+					"\\pard\\sa200\\sl480\\slmult1\\qc\\f0\\fs32\\lang9\\par",
+					"[TITLE]\\par",
+					"",
+					"\\pard\\fi540\\sa200\\sl276\\slmult1\\fs22 [INTRODUCTION]\\par",
+					"[PARA1]\\par",
+					"",
+					"\\pard\\sa200\\sl276\\slmult1\\tx540\\tab [PARA2]\\par",
+					"\\tab [PARA3]\\par",
+					"\\tab [PARA4]\\par",
+					"\\par",
+					"[SIGNATURE]\\par",
+					"}"
+				];
+				let rtfTitle = rtfTemplate[3].replace("[TITLE]", title.value);
+				let rtfIntro = rtfTemplate[5].replace("[INTRODUCTION]", intro.value);
+				let rtfPara1 = rtfTemplate[6].replace("[PARA1]", para3.value);
+				let rtfPara2 = rtfTemplate[8].replace("[PARA2]", para1.value);
+				let rtfPara3 = rtfTemplate[9].replace("[PARA3]", para2.value);
+				let rtfPara4 = rtfTemplate[10].replace("[PARA4]", para4.value);
+				let rtfStr = rtfTemplate[0] + "\n" + rtfTemplate[1] + "\n" + rtfTemplate[2] + "\n" + rtfTitle + "\n" + rtfTemplate[4] + "\n" + rtfIntro + "\n" + rtfPara1 + "\n" + rtfTemplate[7] + "\n" + rtfPara2 + "\n" + rtfPara3 + "\n" + rtfPara4;
+				let blob = new Blob([rtfStr]);
+				let file = new File([blob], title.value + ".rtf");
+				let dlFile = document.createElement("a");
+				dlFile.href = URL.createObjectURL(file);
+				dlFile.download = file.name;
+				dlFile.id = "downloadFileBtn";
+				document.body.append(dlFile);
+				document.getElementById("downloadFileBtn").click();
+			}
+		</script>
+	</body>
+</html>
